@@ -1,45 +1,119 @@
+import { useState } from "react";
+import { motion } from "framer-motion";
 import { navigation } from "../../../constants/navigation";
 
 const NavLinks = () => {
+  const [active, setActive] = useState("HOME");
+
   return (
-    <ul className="hidden lg:flex items-center gap-12">
-      {navigation.map((item) => (
-        <li key={item.id}>
-          <a
-            href={item.href}
-            className="
-              relative
+    <ul className="flex items-center gap-12">
+      {navigation.map((item) => {
+        const isActive = active === item.title;
 
-              text-[15px]
-              font-medium
-              tracking-wide
+        return (
+          <li key={item.id}>
+            <motion.a
+              href={item.href}
+              onClick={() => setActive(item.title)}
+              whileHover={{ y: -2 }}
+              transition={{
+                duration: 0.25,
+              }}
+              className="
+                relative
 
-              text-zinc-300
+                flex
+                items-center
+                justify-center
 
-              transition
-              duration-300
+                py-2
 
-              hover:text-white
+                uppercase
 
-              after:absolute
-              after:left-0
-              after:-bottom-2
+                text-[12px]
 
-              after:h-[2px]
-              after:w-0
+                tracking-[0.28em]
 
-              after:bg-white
+                font-medium
 
-              after:transition-all
-              after:duration-300
+                transition-colors
+                duration-300
 
-              hover:after:w-full
-            "
-          >
-            {item.title}
-          </a>
-        </li>
-      ))}
+                select-none
+              "
+            >
+              {/* Active Background */}
+
+              {isActive && (
+                <motion.span
+                  layoutId="active-pill"
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 35,
+                  }}
+                  className="
+                    absolute
+
+                    inset-0
+
+                    rounded-full
+
+                    bg-white/[0.06]
+
+                    border
+
+                    border-white/10
+                  "
+                />
+              )}
+
+              {/* Text */}
+
+              <span
+                className={`
+                  relative
+                  z-10
+
+                  transition-all
+                  duration-300
+
+                  ${
+                    isActive
+                      ? "text-white"
+                      : "text-zinc-500 group-hover:text-white"
+                  }
+                `}
+              >
+                {item.title}
+              </span>
+
+              {/* Underline */}
+
+              <motion.span
+                initial={{
+                  width: 0,
+                }}
+                whileHover={{
+                  width: "100%",
+                }}
+                transition={{
+                  duration: .3,
+                }}
+                className="
+                  absolute
+
+                  -bottom-1
+
+                  h-[1px]
+
+                  bg-white
+                "
+              />
+            </motion.a>
+          </li>
+        );
+      })}
     </ul>
   );
 };
